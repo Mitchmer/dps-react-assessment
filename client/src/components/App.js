@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
-import NoMatch from './NoMatch';
-import NavBar from './NavBar';
+import Beers from './Beers'
+import BeerView from './BeerView'
+import Breweries from './Breweries'
 import Flash from './Flash';
 import Home from './Home';
-import { Switch, Route } from 'react-router-dom';
+import NavBar from './NavBar';
+import NoMatch from './NoMatch';
+import React, { Component } from 'react';
 import { Segment } from 'semantic-ui-react';
+import { Switch, Route } from 'react-router-dom';
 
 class App extends Component {
   render() {
@@ -14,6 +17,9 @@ class App extends Component {
         <Flash />
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route exact path="/beers" component={Beers} />
+          <Route exact path='/beers/:id' component={BeerView} />
+          <Route exact path="/breweries" component={Breweries} />
           <Route component={NoMatch} />
         </Switch>
       </Segment>
