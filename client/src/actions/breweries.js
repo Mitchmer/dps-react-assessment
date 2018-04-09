@@ -13,6 +13,7 @@ export const getBreweries = () => {
           type: BREWERIES, 
           breweries: res.data.entries,
         })
+        console.log(res.data)
       })
   }
 }

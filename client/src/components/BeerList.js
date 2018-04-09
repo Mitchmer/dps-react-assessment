@@ -1,4 +1,5 @@
 import React from 'react'
+import BeerView from './BeerView'
 import { 
   Grid,
   Card, 
@@ -6,10 +7,13 @@ import {
   Button,
   Container,
 } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import { getBeer } from '../actions/beers'
 
 class BeerList extends React.Component {
-  
+
   render() {
     const { beers } = this.props
     return (
@@ -22,17 +26,19 @@ class BeerList extends React.Component {
           {
             beers.map( beer =>
               <Grid.Column key={beer.id}>
-                <Card>
-                  {
-                    beer.labels ? 
-                      <StyledImage src={beer.labels.medium} size='tiny' />
-                    :
-                      <StyledImage src='http://mediad.publicbroadcasting.net/p/krcu/files/201604/beer_10.jpg' size='tiny' />
-                  }
-                  <Card.Content>
-                    {beer.name}
-                  </Card.Content>
-                </Card>
+                <Link to={`beers/${beer.id}`}>
+                  <Card>
+                    {
+                      beer.labels ? 
+                        <StyledImage src={beer.labels.medium} />
+                      :
+                        <StyledImage src='http://mediad.publicbroadcasting.net/p/krcu/files/201604/beer_10.jpg' size='tiny' />
+                    }
+                    <Card.Content>
+                      {beer.name}
+                    </Card.Content>
+                  </Card>
+                </Link>
               </Grid.Column>
             )
           }
@@ -43,7 +49,10 @@ class BeerList extends React.Component {
 }
 
 const StyledImage = styled(Image) `
-  height: 200 !important;
+  height: 200px !important;
 `
+const mapStateToProps = (state) => {
+  return { beers: state.beers }
+}
 
-export default BeerList
+export default connect(mapStateToProps)(BeerList)

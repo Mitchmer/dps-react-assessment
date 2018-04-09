@@ -1,25 +1,21 @@
 import BeerList from './BeerList'
-import InfiniteScroll from 'react-infinite-scroller'
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { 
-  Grid,
-  Card, 
-  Image,
   Button,
   Container,
 } from 'semantic-ui-react'
 import { 
   getBeers, 
-  getTotalBeerPages 
+  getTotalBeerPages,
 } from '../actions/beers.js'
 import axios from 'axios'
 
 class Beers extends React.Component {
-  state = { page: 1, total_pages: 0, currentBeers: [...this.props.beers] }
+  state = { page: 1, currentBeers: [], }
 
   componentDidMount() {
-    // this.props.dispatch(getBeers(this.state.page))
+    this.props.dispatch(getBeers(this.state.page))
     this.props.dispatch(getTotalBeerPages())
     axios.get(`/api/all_beers?page=1&per_page=10`)
     .then( res => {
@@ -56,6 +52,10 @@ class Beers extends React.Component {
           }
         })
       })
+      .then(
+        this.props.dispatch(getBeers(this.state.page))
+      )
+
   }
 
   beerList = () => {
@@ -66,12 +66,15 @@ class Beers extends React.Component {
         <BeerList
           beers={currentBeers}
         />
+        {
+          page < totalBeerPages &&
         <Button
-          onClick={this.getMoreBeers}
-          fluid
+        onClick={this.getMoreBeers}
+        fluid
         >
           Next 10
         </Button>
+        }
       </Container>
     )
   }
