@@ -1,3 +1,4 @@
+import InfiniteScroll from 'react-infinite-scroller'
 import React from 'react'
 import { connect } from 'react-redux'
 import {
@@ -7,20 +8,17 @@ import {
   Segment,
   Card,
 } from 'semantic-ui-react'
-import { getBreweries } from '../actions/breweries'
+import { 
+  getBreweries,
+  getTotalPages,
+} from '../actions/breweries'
 
 class Breweries extends React.Component {
   state = { shouldRender: false }
 
   componentDidMount() {
-    this.setState({ shouldRender: false })
     this.props.dispatch(getBreweries())
-  }
-
-  componentDidUpdate() {
-    debugger
-    if (this.state.shouldRender === false)
-      this.setState({ shouldRender: true })
+    this.props.dispatch(getTotalPages())
   }
 
   showBreweries = () => {
@@ -30,10 +28,11 @@ class Breweries extends React.Component {
       page,
     } = this.props
 
-
-
     return (
       <Container>
+        <InfiniteScroll
+
+        >
         <Grid columns={3}>
           {
             breweries.map( brewery =>
@@ -55,6 +54,7 @@ class Breweries extends React.Component {
             
           }
         </Grid>
+        </InfiniteScroll>
         
       </Container>
     )
@@ -67,9 +67,6 @@ class Breweries extends React.Component {
     return (
       <div>
         {
-          (this.state.shouldRender === false) ?
-            null
-          :
             this.showBreweries()
         }
       </div>
@@ -79,8 +76,8 @@ class Breweries extends React.Component {
 
 const mapStateToProps = (state) => {
   return { 
-    breweries: state.breweries.entries,
-    totalPages: state.breweries.total_pages,
+    breweries: state.breweries,
+    totalPages: state.totalpages,
     page: state.breweries.page,
   }
 }
