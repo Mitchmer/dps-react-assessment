@@ -1,5 +1,5 @@
 import BeerList from './BeerList'
-import React, { Fragment } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { 
   Button,
@@ -30,14 +30,6 @@ class Beers extends React.Component {
 
   }
 
-  nextPage = () => {
-    this.setState(() => {
-      return {
-        page: this.state.page + 1
-      }
-    })
-  }
-
   getMoreBeers = () => {
     const newPage = this.state.page + 1
     axios.get(`/api/all_beers?page=${newPage}&per_page=10`)
@@ -52,44 +44,34 @@ class Beers extends React.Component {
           }
         })
       })
-      .then(
-        this.props.dispatch(getBeers(this.state.page))
-      )
-
   }
 
-  beerList = () => {
-    const { beers, totalBeerPages } = this.props
-    const { page, currentBeers } = this.state
+
+  render() {
+    const {  currentBeers, page } = this.state
+    const { totalBeerPages } = this.props
     return (
       <Container>
-        <BeerList
-          beers={currentBeers}
-        />
+        <BeerList beers={currentBeers} />
         {
           page < totalBeerPages &&
-        <Button
-        onClick={this.getMoreBeers}
-        fluid
-        >
-          Next 10
-        </Button>
+            <Button
+              fluid
+              onClick={this.getMoreBeers}
+            >
+              Next 10
+            </Button>
         }
       </Container>
     )
   }
-  render() {
-      return (
-        this.beerList()
-      )
-  }
-  
 }
 
 const mapStateToProps = (state) => {
   return { 
     beers: state.beers,
-    totalBeerPages: state.totalbeerpages
+    totalBeerPages: state.totalbeerpages,
+    page: state.beers.page,
   }
 }
 

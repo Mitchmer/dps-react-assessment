@@ -1,10 +1,8 @@
 import axios from 'axios'
 import BreweryList from './BreweryList'
-import InfiniteScroll from 'react-infinite-scroller'
 import React from 'react'
 import { connect } from 'react-redux'
 import {
-  Grid,
   Container,
   Button,
 } from 'semantic-ui-react'

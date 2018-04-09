@@ -1,6 +1,5 @@
 import {
   BREWERIES,
-  LOAD_MORE_BREWERIES
 } from '../actions/breweries'
 
 export const breweries = ( state = [], action ) => {

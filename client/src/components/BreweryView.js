@@ -2,10 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { 
   Grid,
-  Card, 
   Image,
-  Button,
-  Container,
   Segment,
   Header,
 } from 'semantic-ui-react'
