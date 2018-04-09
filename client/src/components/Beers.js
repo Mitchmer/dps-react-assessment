@@ -1,3 +1,4 @@
+import InfiniteScroll from 'react-infinite-scroller'
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { 
@@ -8,17 +9,21 @@ import {
 import { getBeers } from '../actions/beers.js'
 
 class Beers extends React.Component {
-  
+  state = { page: 1, total_pages: 0, }
+
   componentDidMount() {
-    this.props.dispatch(getBeers())
+    this.props.dispatch(getBeers(this.state.page))
   }
-
-
 
   render() {
     const { beers } = this.props
+    const { page } = this.state
     return (
       <Grid columns={3}>
+        <InfiniteScroll
+            // pageStart={page}
+            // loadMore={loadFunc}
+        >
           {
             beers.map( beer =>
               <Grid.Column>
@@ -36,6 +41,7 @@ class Beers extends React.Component {
               </Grid.Column>
             )
           }
+        </InfiniteScroll>
       </Grid>
     )
   }
