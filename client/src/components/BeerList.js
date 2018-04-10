@@ -5,6 +5,7 @@ import {
   Card, 
   Image,
 } from 'semantic-ui-react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 class BeerList extends React.Component {
@@ -41,4 +42,11 @@ const StyledImage = styled(Image) `
   height: 200px !important;
 `
 
-export default BeerList
+const mapStateToProps = (state) => {
+  return { 
+    beers: state.beers, 
+    totalPages: state.totalbeerpages
+  }
+}
+
+export default connect(mapStateToProps)(BeerList)

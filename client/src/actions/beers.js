@@ -3,6 +3,7 @@ import axios from 'axios'
 export const BEER = 'BEER'
 export const BEERS = 'BEERS'
 export const TOTAL_BEER_PAGES = 'TOTAL_BEER_PAGES'
+export const BEER_PAGE = 'BEER_PAGE'
 
 export const getBeer = (id) => {
   return (dispatch) => {
@@ -11,6 +12,13 @@ export const getBeer = (id) => {
         dispatch({ type: BEER, beer: res.data })
         console.log(res.data)
       })
+  }
+}
+
+export const updateBeerPage = (page) => {
+  page ? null : page = 1
+  return (dispatch) => {
+    dispatch({ type: BEER_PAGE, beerpage: page })
   }
 }
 

@@ -1,13 +1,13 @@
 import axios from 'axios'
 
 export const BREWERIES = 'BREWERIES'
+export const BREWERY_PAGE = 'BREWERY_PAGE'
 export const LOAD_MORE_BREWERIES = 'LOAD_MORE_BREWERIES'
 export const TOTAL_PAGES = 'TOTAL_PAGES'
 
-export const getBreweries = () => {
-  const resetPage = 1
+export const getBreweries = (page) => {
   return (dispatch) => {
-    axios.get(`api/all_breweries?page=${resetPage}&per_page=10`)
+    axios.get(`api/all_breweries?page=${page}&per_page=10`)
       .then( res => {
         dispatch({ 
           type: BREWERIES, 
@@ -15,6 +15,13 @@ export const getBreweries = () => {
         })
         console.log(res.data)
       })
+  }
+}
+
+export const updateBreweryPage = (page) => {
+  page ? null : page = 1
+  return (dispatch) => {
+    dispatch({ type: BREWERY_PAGE, brewerypage: page })
   }
 }
 

@@ -9,51 +9,37 @@ import {
 import { 
   getBreweries,
   getTotalPages,
+  updateBreweryPage,
 } from '../actions/breweries'
 
 class Breweries extends React.Component {
-  state = { page: 1, currentBreweries: [], }
 
   componentDidMount() {
-    this.props.dispatch(getBreweries(this.state.page))
-    this.props.dispatch(getTotalPages())
-    axios.get(`/api/all_breweries?page=1&per_page=10`)
-    .then( res => {
-      this.setState((state) => {
-        return {
-          currentBreweries: [
-            ...res.data.entries,
-          ]
-        }
-      })
-    })
-
+    const { dispatch, breweryPage, breweries } = this.props
+    breweryPage ? 
+        dispatch(updateBreweryPage(breweryPage))
+      :
+        dispatch(updateBreweryPage(1))
+    if ( breweries.length === 0 ) {
+      dispatch(getBreweries(breweryPage))
+    }
+    dispatch(getTotalPages())     
   }
 
   getMoreBreweries = () => {
-    const newPage = this.state.page + 1
-    axios.get(`/api/all_breweries?page=${newPage}&per_page=10`)
-      .then( res => {
-        this.setState((state) => {
-          return {
-            currentBreweries: [
-              ...this.state.currentBreweries,
-              ...res.data.entries,
-            ],
-            page: this.state.page + 1
-          }
-        })
-      })
+    const { breweryPage, dispatch } = this.props
+    let newPage = breweryPage + 1
+    dispatch(getBreweries(newPage))
+    dispatch(updateBreweryPage(newPage))
   }
 
   render() {
-    const { currentBreweries, page } = this.state
-    const { totalPages } = this.props
+    const { totalPages, breweryPage } = this.props
     return (
       <Container>
-        <BreweryList breweries={currentBreweries} />
+        <BreweryList />
         {
-          page < totalPages &&
+          breweryPage < totalPages &&
             <Button 
               fluid
               onClick={this.getMoreBreweries}
@@ -70,7 +56,7 @@ const mapStateToProps = (state) => {
   return { 
     breweries: state.breweries,
     totalPages: state.totalpages,
-    page: state.breweries.page,
+    breweryPage: state.brewerypage,
   }
 }
 

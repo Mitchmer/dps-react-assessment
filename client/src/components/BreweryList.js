@@ -6,6 +6,7 @@ import {
   Image,
 } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 class BreweryList extends React.Component {
 
@@ -41,9 +42,16 @@ class BreweryList extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    breweries: state.breweries,
+    totalPages: state.totalpages,
+  }
+}
+
 const StyledImage = styled(Image) `
   height: 100px !important;
   width: auto;
 `
 
-export default BreweryList
+export default connect(mapStateToProps)(BreweryList)

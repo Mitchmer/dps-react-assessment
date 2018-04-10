@@ -5,9 +5,14 @@ import {
 export const breweries = ( state = [], action ) => {
   switch (action.type) {
     case BREWERIES:
-      return action.breweries
-    // case LOAD_MORE_BREWERIES:
-    //   return action.breweries
+      let uniqueBreweries = (state) => {
+        return [...new Set(state)]
+      }
+      let newArr = uniqueBreweries(state)
+      return [
+        ...newArr,
+        ...action.breweries,
+      ]
     default:
       return state
   }
