@@ -6,8 +6,9 @@ export const BREWERY_PAGE = 'BREWERY_PAGE'
 export const TOTAL_PAGES = 'TOTAL_PAGES'
 
 export const getBrewery = (name) => {
+  let encodedName = encodeURIComponent(name)
   return (dispatch) => {
-    axios.get(`api/brewery/${name}`)
+    axios.get(`api/brewery/${encodedName}`)
       .then( res => {
         dispatch({ type: BREWERY, brewery: res.data.entries[0] })
       })

@@ -69,13 +69,13 @@ class Breweries extends React.Component {
               <Divider hidden />
             </div>
         }
-        <Grid columns={3}>
+        <Grid>
         {
           breweryView ?
             <BreweryView />
           :
             breweries.map( brewery =>
-              <Grid.Column key={brewery.id}>
+              <Grid.Column key={brewery.id} mobile={16} tablet={8} computer={5}>
                 <StyledSegment onClick={() => this.breweryRoute(brewery.name)}>
                   <Card>
                     {
@@ -116,9 +116,10 @@ const StyledImage = styled(Image)`
 `
 
 const StyledSegment = styled(Segment)`
+  display: flex !important;
+  justify-content: center !important;
   align-items: center !important;
   background: linear-gradient(to bottom, lightgrey, white) !important;
-  display: flex !important;
   height: 100% !important;
 `
 const mapStateToProps = (state) => {

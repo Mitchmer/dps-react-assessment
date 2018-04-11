@@ -9,8 +9,8 @@ import {
   Container,
   Divider,
   Grid,
-  Segment,
   Image,
+  Segment,
 } from 'semantic-ui-react'
 import { 
   getBeer,
@@ -20,7 +20,7 @@ import {
 } from '../actions/beers.js'
 
 class Beers extends React.Component {
-  state = { beerView: false }
+  state = { beerView: false, windowSize: '' }
 
   componentDidMount() {
     const { dispatch, beerPage, beers } = this.props
@@ -31,7 +31,9 @@ class Beers extends React.Component {
     if ( beers.length === 0 ) {
       dispatch(getBeers(beerPage))
     }
-    dispatch(getTotalBeerPages()) 
+    dispatch(getTotalBeerPages())
+    let initialWindowSize = window.innerWidth + 'px'
+    this.setState({ windowSize: initialWindowSize })
   }
 
   toggleBeerView = () => {
@@ -42,6 +44,11 @@ class Beers extends React.Component {
     const { dispatch } = this.props
     dispatch(getBeer(name))
     this.toggleBeerView()
+  }
+
+  handleOnUpdate = () => {
+    let updatedWindowSize = window.innerWidth + 'px'
+    this.setState({ windowSize: updatedWindowSize })
   }
 
   getMoreBeers = () => {
@@ -56,60 +63,67 @@ class Beers extends React.Component {
     const { beerView } = this.state
     return (
       <Container>
-        <Divider hidden />
-        {
-          beerView &&
-            <div>
-              <Button
-                onClick={this.toggleBeerView}
-                fluid
-              >
-                Back
-              </Button>
-              <Divider hidden />
-            </div>
-        }
-        <Grid columns={3}>
-        {
-          beerView ?
-            <BeerView />
-          :
-            beers.map( beer =>
-              <Grid.Column key={beer.id}>
-                <StyledSegment onClick={() => this.beerRoute(beer.name)}>
-                  <Card>
-                    {
-                      beer.labels ? 
-                        <Image src={beer.labels.medium} />
-                      :
-                        <StyledImage src={beer_default} />
-                    }
-                    <Card.Content>
-                      {beer.name}
-                    </Card.Content>
-                  </Card>
-                </StyledSegment>
-                <Divider />
-              </Grid.Column>
-            )
-        }
-        { 
-          !beerView &&
-            beerPage < totalBeerPages &&
-              <Button
-                fluid
-                onClick={this.getMoreBeers}
-              >
-                Next 10
-              </Button>
-        }
+        {/* <Responsive onUpdate={this.handleOnUpdate}> */}
+          <Divider hidden />
+          {
+            beerView &&
+              <div>
+                <Button
+                  onClick={this.toggleBeerView}
+                  fluid
+                >
+                  Back
+                </Button>
+                <Divider hidden />
+              </div>
+          }
+          <Grid>
+          {
+            beerView ?
+              <BeerView />
+            :
+              beers.map( beer =>
+                <Grid.Column key={beer.id} mobile={16} tablet={8} computer={5}>
+                  <StyledSegment onClick={() => this.beerRoute(beer.name)}>
+                    <Card>
+                      {
+                        beer.labels ? 
+                          <Image src={beer.labels.medium} />
+                        :
+                          <StyledImage src={beer_default} />
+                      }
+                      <Card.Content>
+                        {beer.name}
+                      </Card.Content>
+                    </Card>
+                  </StyledSegment>
+                  <Divider />
+                </Grid.Column>
+              )
+          }
+          { 
+            !beerView &&
+              beerPage < totalBeerPages &&
+                <Button
+                  fluid
+                  onClick={this.getMoreBeers}
+                >
+                  Next 10
+                </Button>
+          }
 
-        <Divider hidden />
-        </Grid>
+          <Divider hidden />
+          </Grid>
+        {/* </Responsive> */}
       </Container>
     )
   }
 }
+
+// const StyledContainer = styled(Container)`
+//   display: flex !important;
+//   justify-content: center !important;
+// `
 
 const StyledImage = styled(Image)`
   height: 256 !important;
@@ -117,9 +131,10 @@ const StyledImage = styled(Image)`
 `
 
 const StyledSegment = styled(Segment)`
+  display: flex !important;
+  justify-content: center !important;
   align-items: center !important;
   background: linear-gradient(to bottom, lightgrey, white) !important;
-  display: flex !important;
   height: 100% !important;
 `
 

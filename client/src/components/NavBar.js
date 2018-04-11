@@ -23,10 +23,11 @@ class NavBar extends Component {
           </Link>
           <Menu.Menu position='right'>
             <Link to='/'>
-              <Menu.Item name='DPS React Assessment' />
+              <Menu.Item name='DPS Assessment' />
             </Link>
           </Menu.Menu>
         </Menu>
+        
       </div>
     )
   }
