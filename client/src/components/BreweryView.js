@@ -1,6 +1,8 @@
+import brewery_default from '../images/brewery_default.jpeg'
 import React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { 
+import {
   Grid,
   Image,
   Segment,
@@ -10,10 +12,6 @@ import {
 
 class BreweryView extends React.Component {
 
-  // componentDidMount() {
-  //   this.props.dispatch(getBreweries())
-  // }
-  
   render() {   
     const { brewery } = this.props
     return (
@@ -21,9 +19,9 @@ class BreweryView extends React.Component {
             <Grid.Column width={4}>
               {
                 brewery.images ? 
-                  <Image src={brewery.images.large} />
+                  <StyledImage src={brewery.images.square_large} />
                 :
-                  <Image src='http://www.phillylovesbeer.org/wp-content/uploads/2017/08/thebrewery.jpg' size='massive' />
+                  <StyledImage src={brewery_default} />
               }
             </Grid.Column>
             <Grid.Column width={12}>
@@ -38,9 +36,12 @@ class BreweryView extends React.Component {
                         Website: <a href={`${brewery.website}`}>{brewery.website}</a>
                       </Header>
                   }
-                  <Header as="h4">
-                    {brewery.description}
-                  </Header>
+                  {
+                    brewery.description &&
+                      <Header as="h4">
+                        {brewery.description}
+                      </Header>
+                  }
                 </Segment>
               </Grid.Row>
             </Grid.Column>
@@ -49,8 +50,14 @@ class BreweryView extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return { brewery: state.breweries.find( b => b.id === props.match.params.id ) }
+const StyledImage = styled(Image)`
+  height: 256 !important;
+  width: 256 !important;
+  border-radius: 3%;
+`
+
+const mapStateToProps = (state) => {
+  return { brewery: state.brewery }
 }
 
 export default connect(mapStateToProps)(BreweryView)

@@ -1,3 +1,4 @@
+import beer_default from '../images/beer_default.jpg'
 import BeerView from './BeerView'
 import React from 'react'
 import styled from 'styled-components'
@@ -76,12 +77,12 @@ class Beers extends React.Component {
             beers.map( beer =>
               <Grid.Column key={beer.id}>
                 <StyledSegment onClick={() => this.beerRoute(beer.name)}>
-                  <Card height="300">
+                  <Card>
                     {
                       beer.labels ? 
                         <Image src={beer.labels.medium} />
                       :
-                        <StyledImage src='https://cdn.craftbeer.com/wp-content/uploads/fall-beer-stein.jpg' />
+                        <StyledImage src={beer_default} />
                     }
                     <Card.Content>
                       {beer.name}
@@ -95,12 +96,12 @@ class Beers extends React.Component {
         { 
           !beerView &&
             beerPage < totalBeerPages &&
-            <Button
-              fluid
-              onClick={this.getMoreBeers}
-            >
-              Next 10
-            </Button>
+              <Button
+                fluid
+                onClick={this.getMoreBeers}
+              >
+                Next 10
+              </Button>
         }
 
         <Divider hidden />

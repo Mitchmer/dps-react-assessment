@@ -1,8 +1,8 @@
+import beer_default from '../images/beer_default.jpg'
 import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { 
-  Divider,
+import {
   Grid,
   Image,
   Segment,
@@ -10,17 +10,17 @@ import {
 } from 'semantic-ui-react'
 
 class BeerView extends React.Component {
+
   render() {
     const { beer } = this.props
     return (
         <Grid>
-          {/* also have a function that checks style, abv and description */}
           <Grid.Column width={4}>
             {
               beer.labels ? 
                 <StyledImage src={beer.labels.medium} />
               :
-                <StyledImage src='https://cdn.craftbeer.com/wp-content/uploads/fall-beer-stein.jpg' />
+                <StyledImage src={beer_default} />
             }
           </Grid.Column>
           <Grid.Column width={12}>

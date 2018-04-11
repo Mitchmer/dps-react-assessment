@@ -2,8 +2,8 @@ import axios from 'axios'
 
 export const BEER = 'BEER'
 export const BEERS = 'BEERS'
-export const TOTAL_BEER_PAGES = 'TOTAL_BEER_PAGES'
 export const BEER_PAGE = 'BEER_PAGE'
+export const TOTAL_BEER_PAGES = 'TOTAL_BEER_PAGES'
 
 export const getBeer = (name) => {
   return (dispatch) => {

@@ -1,9 +1,26 @@
 import axios from 'axios'
 
+export const BREWERY = 'BREWERY'
 export const BREWERIES = 'BREWERIES'
 export const BREWERY_PAGE = 'BREWERY_PAGE'
-export const LOAD_MORE_BREWERIES = 'LOAD_MORE_BREWERIES'
 export const TOTAL_PAGES = 'TOTAL_PAGES'
+
+export const getBrewery = (name) => {
+  return (dispatch) => {
+    axios.get(`api/brewery/${name}`)
+      .then( res => {
+        dispatch({ type: BREWERY, brewery: res.data.entries[0] })
+        console.log('success')
+      })
+  }
+}
+
+export const updateBreweryPage = (page) => {
+  page ? null : page = 1
+  return (dispatch) => {
+    dispatch({ type: BREWERY_PAGE, brewerypage: page })
+  }
+}
 
 export const getBreweries = (page) => {
   return (dispatch) => {
@@ -18,12 +35,6 @@ export const getBreweries = (page) => {
   }
 }
 
-export const updateBreweryPage = (page) => {
-  page ? null : page = 1
-  return (dispatch) => {
-    dispatch({ type: BREWERY_PAGE, brewerypage: page })
-  }
-}
 
 export const getTotalPages = () => {
   return (dispatch) => {
