@@ -5,12 +5,12 @@ export const BEERS = 'BEERS'
 export const TOTAL_BEER_PAGES = 'TOTAL_BEER_PAGES'
 export const BEER_PAGE = 'BEER_PAGE'
 
-export const getBeer = (id) => {
+export const getBeer = (name) => {
   return (dispatch) => {
-    axios.get(`api/all_beers/${id}`)
+    axios.get(`api/beer/${name}`)
       .then( res => {
-        dispatch({ type: BEER, beer: res.data })
-        console.log(res.data)
+        dispatch({ type: BEER, beer: res.data.entries[0] })
+        console.log('success')
       })
   }
 }

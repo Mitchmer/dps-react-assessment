@@ -19,7 +19,7 @@ class App extends Component {
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path="/beers" component={Beers} />
-          <Route exact path='/beers/:id' component={BeerView} />
+          <Route exact path='/beer/:name' component={BeerView} />
           <Route exact path="/breweries" component={Breweries} />
           <Route exact path='/breweries/:id' component={BreweryView} />
           <Route component={NoMatch} />

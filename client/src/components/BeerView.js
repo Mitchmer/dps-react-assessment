@@ -1,29 +1,26 @@
 import React from 'react'
+import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { 
+  Divider,
   Grid,
   Image,
   Segment,
   Header,
 } from 'semantic-ui-react'
-// import { getBeer } from '../actions/beers'
 
 class BeerView extends React.Component {
-
-  // componentDidMount() {
-  //   this.props.dispatch(getBeers())
-  // }
-  
-  render() {   
+  render() {
     const { beer } = this.props
     return (
         <Grid>
+          {/* also have a function that checks style, abv and description */}
           <Grid.Column width={4}>
             {
               beer.labels ? 
-                <Image src={beer.labels.medium} />
+                <StyledImage src={beer.labels.medium} />
               :
-                <Image src='http://mediad.publicbroadcasting.net/p/krcu/files/201604/beer_10.jpg' size='large' />
+                <StyledImage src='https://cdn.craftbeer.com/wp-content/uploads/fall-beer-stein.jpg' />
             }
           </Grid.Column>
           <Grid.Column width={12}>
@@ -32,15 +29,24 @@ class BeerView extends React.Component {
                 <Header as="h1">
                   {beer.name}
                 </Header>
-                <Header as="h3">
-                  {beer.style.name}
-                </Header>
-                <Header as="h3">
-                  ABV: {beer.abv}
-                </Header>
-                <Header as="h4">
-                  {beer.description}
-                </Header>
+                  { 
+                    beer.style && 
+                      <Header as="h3">
+                        {beer.style.name}
+                      </Header>
+                  }
+                  {
+                    beer.abv &&
+                      <Header as="h3">
+                        ABV: {beer.abv}
+                      </Header>
+                  }
+                  {
+                    beer.description &&
+                      <Header as="h4">
+                        {beer.description}
+                      </Header>
+                  }
               </Segment>
             </Grid.Row>
           </Grid.Column>
@@ -49,8 +55,13 @@ class BeerView extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return { beer: state.beers.find( b => b.id === props.match.params.id ) }
+const StyledImage = styled(Image)`
+  height: 256 !important;
+  width: 256 !important;
+  border-radius: 3%;
+`
+const mapStateToProps = (state) => {
+  return { beer: state.beer }
 }
 
 export default connect(mapStateToProps)(BeerView)
