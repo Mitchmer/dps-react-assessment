@@ -1,5 +1,4 @@
 import brewery_default from '../images/brewery_default.jpeg'
-import BreweryList from './BreweryList'
 import BreweryView from './BreweryView'
 import React from 'react'
 import styled from 'styled-components'

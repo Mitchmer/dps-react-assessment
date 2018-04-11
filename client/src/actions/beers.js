@@ -10,13 +10,11 @@ export const getBeer = (name) => {
     axios.get(`api/beer/${name}`)
       .then( res => {
         dispatch({ type: BEER, beer: res.data.entries[0] })
-        console.log('success')
       })
   }
 }
 
 export const updateBeerPage = (page) => {
-  page ? null : page = 1
   return (dispatch) => {
     dispatch({ type: BEER_PAGE, beerpage: page })
   }
@@ -27,7 +25,6 @@ export const getBeers = (page) => {
     axios.get(`api/all_beers?page=${page}&per_page=10`)
       .then( res => {
         dispatch({ type: BEERS, beers: res.data.entries })
-        console.log(res.data)
       })
   }
 }

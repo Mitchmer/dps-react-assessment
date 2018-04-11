@@ -10,13 +10,11 @@ export const getBrewery = (name) => {
     axios.get(`api/brewery/${name}`)
       .then( res => {
         dispatch({ type: BREWERY, brewery: res.data.entries[0] })
-        console.log('success')
       })
   }
 }
 
 export const updateBreweryPage = (page) => {
-  page ? null : page = 1
   return (dispatch) => {
     dispatch({ type: BREWERY_PAGE, brewerypage: page })
   }
@@ -30,7 +28,6 @@ export const getBreweries = (page) => {
           type: BREWERIES, 
           breweries: res.data.entries,
         })
-        console.log(res.data)
       })
   }
 }
