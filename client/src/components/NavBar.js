@@ -27,7 +27,7 @@ class NavBar extends Component {
             </Link>
           </Menu.Menu>
         </Menu>
-        
+
       </div>
     )
   }

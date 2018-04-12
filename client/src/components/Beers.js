@@ -8,8 +8,11 @@ import {
   Card,
   Container,
   Divider,
+  Form,
   Grid,
+  Header,
   Image,
+  Input,
   Segment,
 } from 'semantic-ui-react'
 import { 
@@ -17,10 +20,12 @@ import {
   getBeers, 
   getTotalBeerPages,
   updateBeerPage,
+  searchBeers,
+  clearBeers,
 } from '../actions/beers.js'
 
 class Beers extends React.Component {
-  state = { beerView: false, windowSize: '' }
+  state = { beerView: false, windowSize: '', beerSearch: '', searchView: false }
 
   componentDidMount() {
     const { dispatch, beerPage, beers } = this.props
@@ -37,13 +42,36 @@ class Beers extends React.Component {
   }
 
   toggleBeerView = () => {
-    this.setState({ beerView: !this.state.beerView })
+    this.setState({ 
+      beerView: !this.state.beerView,
+    })
+  }
+
+  cancelSearchView = () => {
+    const { beerPage, dispatch } = this.props
+    dispatch(clearBeers())
+    dispatch(updateBeerPage(1))
+    dispatch(getBeers(beerPage))
+    this.setState({ searchView: false, beerSearch: '' })
   }
 
   beerRoute = (name) => {
     const { dispatch } = this.props
     dispatch(getBeer(name))
     this.toggleBeerView()
+  }
+
+  handleChange = (e) => {
+    e.preventDefault()
+    this.setState({ beerSearch: e.target.value })
+  }
+
+  handleSubmit = () => {
+    const { beerSearch } = this.state
+    const { beerPage, dispatch } = this.props
+    dispatch(clearBeers())
+    dispatch(searchBeers(beerSearch, beerPage))
+    this.setState({ searchView: true })
   }
 
   handleOnUpdate = () => {
@@ -53,20 +81,24 @@ class Beers extends React.Component {
 
   getMoreBeers = () => {
     const { beerPage, dispatch } = this.props
+    const { beerSearch, searchView } = this.state
     let newPage = beerPage + 1
-    dispatch(getBeers(newPage))
+    searchView ?
+      dispatch(searchBeers(beerSearch, newPage))
+    :
+      dispatch(getBeers(newPage))      
     dispatch(updateBeerPage(newPage))
   }
 
   render() {
     const { totalBeerPages, beerPage, beers } = this.props
-    const { beerView } = this.state
+    const { beerView, searchView } = this.state
     return (
       <Container>
         {/* <Responsive onUpdate={this.handleOnUpdate}> */}
           <Divider hidden />
           {
-            beerView &&
+            beerView ?
               <div>
                 <Button
                   onClick={this.toggleBeerView}
@@ -76,14 +108,35 @@ class Beers extends React.Component {
                 </Button>
                 <Divider hidden />
               </div>
+              :
+              <div>
+                <Form onSubmit={this.handleSubmit}>
+                  <Input 
+                    fluid 
+                    onChange={(value) => this.handleChange(value) }
+                    icon='search' 
+                    label='Beers'
+                    placeholder='Search...' 
+                  />
+                </Form>
+                <Divider hidden />
+              </div>
           }
-          <Grid>
+          {
+            !beerView && searchView &&
+              <StyledSegment onClick={this.cancelSearchView}>
+                <Header as="h3">
+                  Cancel Search
+                </Header>
+              </StyledSegment>
+          }
+          <StyledGrid>
           {
             beerView ?
               <BeerView />
-            :
+              :
               beers.map( beer =>
-                <Grid.Column key={beer.id} mobile={16} tablet={8} computer={5}>
+                <Grid.Column key={beer.id} mobile={14} tablet={8} computer={5}>
                   <StyledSegment onClick={() => this.beerRoute(beer.name)}>
                     <Card>
                       {
@@ -113,17 +166,17 @@ class Beers extends React.Component {
           }
 
           <Divider hidden />
-          </Grid>
+          </StyledGrid>
         {/* </Responsive> */}
       </Container>
     )
   }
 }
 
-// const StyledContainer = styled(Container)`
-//   display: flex !important;
-//   justify-content: center !important;
-// `
+const StyledGrid = styled(Grid)`
+  display: flex !important;
+  justify-content: center !important;
+`
 
 const StyledImage = styled(Image)`
   height: 256 !important;

@@ -1,5 +1,6 @@
 import {
-  BEERS
+  BEERS,
+  CLEAR_BEERS,
 } from '../actions/beers'
 
 export const beers = ( state = [], action ) => {
@@ -13,6 +14,8 @@ export const beers = ( state = [], action ) => {
         ...newArr,
         ...action.beers
       ]
+    case CLEAR_BEERS:
+      return action.beers
     default:
       return state
   }
