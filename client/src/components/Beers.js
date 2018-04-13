@@ -21,11 +21,12 @@ import {
   getTotalBeerPages,
   updateBeerPage,
   searchBeers,
-  clearBeers,
+  clearBeersSearch,
+  updateBeerSearchPage,
 } from '../actions/beers.js'
 
 class Beers extends React.Component {
-  state = { beerView: false, windowSize: '', beerSearch: '', searchView: false }
+  state = { view: 'all', beerView: false, searchView: false, windowSize: '', beerSearch: '' }
 
   componentDidMount() {
     const { dispatch, beerPage, beers } = this.props
@@ -44,15 +45,15 @@ class Beers extends React.Component {
   toggleBeerView = () => {
     this.setState({ 
       beerView: !this.state.beerView,
+      view: 'beerView',
     })
   }
 
   cancelSearchView = () => {
     const { beerPage, dispatch } = this.props
-    dispatch(clearBeers())
-    dispatch(updateBeerPage(1))
-    dispatch(getBeers(beerPage))
-    this.setState({ searchView: false, beerSearch: '' })
+    dispatch(clearBeersSearch())
+    dispatch(updateBeerSearchPage(1))
+    this.setState({ searchView: false, view: 'all' })
   }
 
   beerRoute = (name) => {
@@ -68,10 +69,11 @@ class Beers extends React.Component {
 
   handleSubmit = () => {
     const { beerSearch } = this.state
-    const { beerPage, dispatch } = this.props
-    dispatch(clearBeers())
-    dispatch(searchBeers(beerSearch, beerPage))
-    this.setState({ searchView: true })
+    const { beerSearchPage, dispatch } = this.props
+    dispatch(clearBeersSearch())
+    dispatch(updateBeerSearchPage(1))
+    dispatch(searchBeers(beerSearch, beerSearchPage))
+    this.setState({ searchView: true, view: 'search' })
   }
 
   handleOnUpdate = () => {
@@ -79,95 +81,158 @@ class Beers extends React.Component {
     this.setState({ windowSize: updatedWindowSize })
   }
 
-  getMoreBeers = () => {
-    const { beerPage, dispatch } = this.props
-    const { beerSearch, searchView } = this.state
-    let newPage = beerPage + 1
-    searchView ?
-      dispatch(searchBeers(beerSearch, newPage))
-    :
-      dispatch(getBeers(newPage))      
-    dispatch(updateBeerPage(newPage))
+  getMoreBeers = (res) => {
+    const { beerPage, beerSearchPage, dispatch } = this.props
+    const { beerSearch } = this.state
+    switch (res) {
+      case 'all': {
+        let newPage = beerPage + 1
+        dispatch(getBeers(newPage))      
+        dispatch(updateBeerPage(newPage))
+        break
+      }
+      case 'search': {
+        let newSearchPage = beerSearchPage + 1
+        dispatch(searchBeers(beerSearch, newSearchPage))
+        dispatch(updateBeerSearchPage(newSearchPage))
+        break
+      }
+      default:
+        return res
+    }
+  }
+
+  allBeersView = () => {
+    const { beers } = this.props
+    return (
+      <div>
+        <StyledGrid>
+          {
+            beers.map( beer =>
+              <Grid.Column key={beer.id} mobile={14} tablet={8} computer={5}>
+                <StyledSegment onClick={() => this.beerRoute(beer.name)}>
+                  <Card>
+                    {
+                      beer.labels ? 
+                        <Image src={beer.labels.medium} />
+                      :
+                        <StyledImage src={beer_default} />
+                    }
+                    <Card.Content>
+                      {beer.name}
+                    </Card.Content>
+                  </Card>
+                </StyledSegment>
+                <Divider />
+              </Grid.Column>
+            )
+          }
+        </StyledGrid>
+        <Divider hidden />
+        <Button
+          fluid
+          onClick={() => this.getMoreBeers('all')}
+        >
+          Next 10
+        </Button>
+      </div>
+    )
+  }
+
+  beersSearchView = () => {
+    const { beersSearch } = this.props
+    return (
+      <div>
+        <StyledSegment onClick={this.cancelSearchView}>
+          <Header as="h3">
+            Cancel Search
+          </Header>
+        </StyledSegment>
+        <StyledGrid>
+          {
+            beersSearch.map( beer =>
+              <Grid.Column key={beer.id} mobile={14} tablet={8} computer={5}>
+                <StyledSegment onClick={() => this.beerRoute(beer.name)}>
+                  <Card>
+                    {
+                      beer.labels ? 
+                        <Image src={beer.labels.medium} />
+                      :
+                        <StyledImage src={beer_default} />
+                    }
+                    <Card.Content>
+                      {beer.name}
+                    </Card.Content>
+                  </Card>
+                </StyledSegment>
+                <Divider />
+              </Grid.Column>
+            )
+          }
+        </StyledGrid>
+        <Divider hidden />
+        <Button
+          fluid
+          onClick={() => this.getMoreBeers('search')}
+        >
+          Next 10
+        </Button>
+      </div>
+    )
+  }
+
+  viewHandler = () => {
+    const { beers, beersSearch } = this.props
+    switch (this.state.view) {
+      case 'all': 
+        return this.allBeersView()
+      case 'search':
+        return this.beersSearchView()
+      case 'beerView':
+        return (
+          <BeerView />
+        )
+    }
   }
 
   render() {
-    const { totalBeerPages, beerPage, beers } = this.props
-    const { beerView, searchView } = this.state
+    const { beerView, view, searchView } = this.state
     return (
       <Container>
-        {/* <Responsive onUpdate={this.handleOnUpdate}> */}
-          <Divider hidden />
-          {
-            beerView ?
-              <div>
-                <Button
-                  onClick={this.toggleBeerView}
-                  fluid
-                >
-                  Back
-                </Button>
-                <Divider hidden />
-              </div>
-              :
-              <div>
-                <Form onSubmit={this.handleSubmit}>
-                  <Input 
-                    fluid 
-                    onChange={(value) => this.handleChange(value) }
-                    icon='search' 
-                    label='Beers'
-                    placeholder='Search...' 
-                  />
-                </Form>
-                <Divider hidden />
-              </div>
-          }
-          {
-            !beerView && searchView &&
-              <StyledSegment onClick={this.cancelSearchView}>
-                <Header as="h3">
-                  Cancel Search
-                </Header>
-              </StyledSegment>
-          }
-          <StyledGrid>
-          {
-            beerView ?
-              <BeerView />
-              :
-              beers.map( beer =>
-                <Grid.Column key={beer.id} mobile={14} tablet={8} computer={5}>
-                  <StyledSegment onClick={() => this.beerRoute(beer.name)}>
-                    <Card>
-                      {
-                        beer.labels ? 
-                          <Image src={beer.labels.medium} />
-                        :
-                          <StyledImage src={beer_default} />
-                      }
-                      <Card.Content>
-                        {beer.name}
-                      </Card.Content>
-                    </Card>
-                  </StyledSegment>
-                  <Divider />
-                </Grid.Column>
-              )
-          }
-          { 
-            !beerView &&
-              beerPage < totalBeerPages &&
-                <Button
-                  fluid
-                  onClick={this.getMoreBeers}
-                >
-                  Next 10
-                </Button>
-          }
+        <Divider hidden />
+        {
+          beerView ?
+            <div>
+              <Button
+                fluid
+                onClick={() => {
+                  searchView ?
+                    this.setState({ view: 'search', beerView: !beerView })
+                  :
+                    this.setState({ view: 'all', beerView: !beerView })
+                  }
+                }
+              >
+                Back
+              </Button>
+              <Divider hidden />
+            </div>
+            :
+            <div>
+              <Form onSubmit={this.handleSubmit}>
+                <Input 
+                  fluid 
+                  onChange={(value) => this.handleChange(value) }
+                  icon='search' 
+                  label='Beers'
+                  placeholder='Search...' 
+                />
+              </Form>
+              <Divider hidden />
+            </div>
+        }
+        {this.viewHandler()}
 
-          <Divider hidden />
-          </StyledGrid>
-        {/* </Responsive> */}
       </Container>
     )
   }
@@ -194,8 +259,10 @@ const StyledSegment = styled(Segment)`
 const mapStateToProps = (state) => {
   return { 
     beers: state.beers,
-    totalBeerPages: state.totalbeerpages,
+    totalBeerPages: state.totalbeerpages, 
     beerPage: state.beerpage,
+    beerSearchPage: state.beerSearchPage,
+    beersSearch: state.beersSearch,
     beer: state.beer,
   }
 }
