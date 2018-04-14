@@ -50,7 +50,7 @@ class Beers extends React.Component {
   }
 
   cancelSearchView = () => {
-    const { beerPage, dispatch } = this.props
+    const { dispatch } = this.props
     dispatch(clearBeersSearch())
     dispatch(updateBeerSearchPage(1))
     this.setState({ searchView: false, view: 'all' })
@@ -69,10 +69,9 @@ class Beers extends React.Component {
 
   handleSubmit = () => {
     const { beerSearch } = this.state
-    const { beerSearchPage, dispatch } = this.props
+    const { dispatch } = this.props
     dispatch(clearBeersSearch())
-    dispatch(updateBeerSearchPage(1))
-    dispatch(searchBeers(beerSearch, beerSearchPage))
+    dispatch(searchBeers(beerSearch, 1))
     this.setState({ searchView: true, view: 'search' })
   }
 
@@ -101,7 +100,7 @@ class Beers extends React.Component {
         return res
     }
   }
-
+//TODO put this in separate component
   allBeersView = () => {
     const { beers } = this.props
     return (
@@ -138,7 +137,7 @@ class Beers extends React.Component {
       </div>
     )
   }
-
+//TODO put this in separate component
   beersSearchView = () => {
     const { beersSearch } = this.props
     return (
@@ -151,7 +150,7 @@ class Beers extends React.Component {
         <StyledGrid>
           {
             beersSearch.map( beer =>
-              <Grid.Column key={beer.id} mobile={14} tablet={8} computer={5}>
+              <Grid.Column key={beer.id} mobile={14} tablet={8} computer={4}>
                 <StyledSegment onClick={() => this.beerRoute(beer.name)}>
                   <Card>
                     {
@@ -182,21 +181,20 @@ class Beers extends React.Component {
   }
 
   viewHandler = () => {
-    const { beers, beersSearch } = this.props
     switch (this.state.view) {
       case 'all': 
         return this.allBeersView()
       case 'search':
         return this.beersSearchView()
       case 'beerView':
-        return (
-          <BeerView />
-        )
+        return <BeerView />
+      default:
+        return null
     }
   }
 
   render() {
-    const { beerView, view, searchView } = this.state
+    const { beerView, searchView } = this.state
     return (
       <Container>
         <Divider hidden />
@@ -210,8 +208,7 @@ class Beers extends React.Component {
                     this.setState({ view: 'search', beerView: !beerView })
                   :
                     this.setState({ view: 'all', beerView: !beerView })
-                  }
-                }
+                }}
               >
                 Back
               </Button>

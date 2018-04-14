@@ -3,11 +3,9 @@ import axios from 'axios'
 export const BEER = 'BEER'
 export const BEERS = 'BEERS'
 export const BEER_PAGE = 'BEER_PAGE'
-export const BEER_SEARCH = 'BEER_SEARCH'
 export const BEER_SEARCH_PAGE = 'BEER_SEARCH_PAGE'
 export const BEERS_SEARCH = 'BEERS_SEARCH'
 export const TOTAL_BEER_PAGES = 'TOTAL_BEER_PAGES'
-export const CLEAR_BEERS = 'CLEAR_BEERS'
 export const CLEAR_BEERS_SEARCH = 'CLEAR_BEERS_SEARCH'
 
 export const clearBeersSearch = () => {

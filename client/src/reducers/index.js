@@ -2,11 +2,13 @@ import beer from './beer'
 import beers from './beers'
 import beerpage from './beerpage'
 import beerSearchPage from './beerSearchPage'
+import beersSearch from './beersSearch'
 import brewery from './brewery'
 import breweries from './breweries'
 import brewerypage from './brewerypage'
+import brewerySearchPage from './brewerySearchPage'
+import breweriesSearch from './breweriesSearch'
 import flash from './flash'
-import beersSearch from './beersSearch'
 import totalbeerpages from './totalbeerpages'
 import totalpages from './totalpages'
 import { combineReducers } from 'redux'
@@ -17,10 +19,12 @@ const rootReducer = combineReducers({
   beers,
   beerpage,
   beerSearchPage,
+  beersSearch,
   brewery,
   breweries,
   brewerypage,
-  beersSearch,
+  brewerySearchPage,
+  breweriesSearch,
   totalpages,
   totalbeerpages,
 })

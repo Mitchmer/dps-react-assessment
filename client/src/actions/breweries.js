@@ -3,7 +3,16 @@ import axios from 'axios'
 export const BREWERY = 'BREWERY'
 export const BREWERIES = 'BREWERIES'
 export const BREWERY_PAGE = 'BREWERY_PAGE'
+export const BREWERY_SEARCH_PAGE = 'BREWERY_SEARCH_PAGE'
+export const BREWERIES_SEARCH = 'BREWERIES_SEARCH'
 export const TOTAL_PAGES = 'TOTAL_PAGES'
+export const CLEAR_BREWERIES_SEARCH = 'CLEAR_BREWERIES_SEARCH'
+
+export const clearBreweriesSearch = () => {
+    return (dispatch) => {
+      dispatch({ type: CLEAR_BREWERIES_SEARCH, breweriesSearch: [] })
+    }
+}
 
 export const getBrewery = (name) => {
   let encodedName = encodeURIComponent(name)
@@ -14,6 +23,23 @@ export const getBrewery = (name) => {
       })
   }
 }
+
+export const updateBrewerySearchPage = (page) => {
+  return (dispatch) => {
+    dispatch({ type: BREWERY_SEARCH_PAGE, brewerySearchPage: page })
+  }
+} 
+
+export const searchBreweries = (params, page) => {
+  let encodedParams = encodeURIComponent(params)
+  return (dispatch) => {
+    axios.get(`api/search_breweries?page=${page}&per_page=10&query=${encodedParams}`)
+      .then( res => {
+        dispatch({ type: BREWERIES_SEARCH, breweriesSearch: res.data.entries })
+      })
+  }
+}
+
 
 export const updateBreweryPage = (page) => {
   return (dispatch) => {
